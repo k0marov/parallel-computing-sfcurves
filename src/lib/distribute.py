@@ -1,8 +1,8 @@
 import numpy as np
 
 
-def split_into_processors(N, N_p):
-    if N_p:
+def split_into_processors(N: int, N_p: int) -> np.array:
+    if N_p <= 0:
         raise Exception('N_p must be non-zero')
     if N_p > N:
         return np.arange(N)
