@@ -24,7 +24,6 @@ def plot_mapping(N, curve, proc_map_2d, save_as: str):
     ax.set_xticks(range(0, N + 1, 2 if N < 32 else 8))
     ax.set_yticks(range(0, N + 1, 2 if N < 32 else 8))
     ax.set_ylim(-1, N)
-    plt.grid(True)
     plt.gca().set_aspect('equal', adjustable='box')
     plt.savefig(save_as)
 
