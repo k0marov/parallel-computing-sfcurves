@@ -1,6 +1,7 @@
 # .gitignore for python and jupyter notebook
 
 output/*
+!output/.gitkeep
 
 MANIFEST
 build
@@ -76,7 +77,6 @@ dist/
 downloads/
 eggs/
 .eggs/
-lib/
 lib64/
 parts/
 sdist/
