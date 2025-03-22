@@ -3,8 +3,10 @@ import sys
 
 import numpy as np
 
-from src.lib import curves, distribute
-from src.lib.misc import draw, export
+from lib import distribute
+from lib import curves
+from lib.misc import draw
+from lib.misc import export
 
 
 def pipeline(N, N_p):
@@ -14,7 +16,7 @@ def pipeline(N, N_p):
     curve, xy_to_index = curves.generate_hilbert_mappings(n)
     assert(len(curve) == N*N)
 
-    proc_map = distribute.split_into_processors(N*N, N_p)
+    proc_map = distribute.split_into_processors(N * N, N_p)
     proc_2d_arr = np.take(proc_map, xy_to_index)
     return curve, proc_map, proc_2d_arr
 
