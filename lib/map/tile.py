@@ -32,7 +32,7 @@ def _get_sides(place: CornerPlace) -> list[NextConnect]:
         case CornerPlace.BOT_LEFT:
             return [NextConnect.BOTTOM, NextConnect.LEFT]
 
-def _get_places(n: int, m: int) -> dict[CornerPlace, tuple[2]]:
+def get_places(n: int, m: int) -> dict[CornerPlace, tuple[2]]:
     return {
         CornerPlace.TOP_LEFT: (0, 0),
         CornerPlace.TOP_RIGHT: (0, m - 1),
@@ -46,7 +46,7 @@ def _check_curve(curve: np.array, start: CornerPlace, next_conn: NextConnect) ->
     m = np.shape(curve)[1]
     size = np.size(curve, None) # total number of elements
     end: CornerPlace = None
-    for place, pos in _get_places(n, m).items():
+    for place, pos in get_places(n, m).items():
         if place == start and curve[pos] != 0:
             return None
         if curve[pos] == size-1:

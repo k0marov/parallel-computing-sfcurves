@@ -1,7 +1,7 @@
 import pytest
 import numpy as np
 
-from lib.map.tile import Tile, CornerPlace, construct_curve, NextConnect, _get_sides, _get_places
+from lib.map.tile import Tile, CornerPlace, construct_curve, NextConnect, _get_sides, get_places
 
 def _assert_curve(curve, end, tile):
     # Basic checks
@@ -9,7 +9,7 @@ def _assert_curve(curve, end, tile):
     assert type(end) is CornerPlace
 
     # Check start position is correct
-    assert curve[_get_places(tile.n, tile.n)[tile.start]] == 0
+    assert curve[get_places(tile.n, tile.n)[tile.start]] == 0
 
     # Check the curve is continuous
     max_val = np.max(curve)
@@ -19,7 +19,7 @@ def _assert_curve(curve, end, tile):
     # Check that the end position actually contains the max value
     assert tile.next_conn in _get_sides(end)
     max_val = np.max(curve)
-    assert curve[_get_places(tile.n, tile.n)[end]] == max_val
+    assert curve[get_places(tile.n, tile.n)[end]] == max_val
 
 
 def test_construct_curve_basic_rotation():
