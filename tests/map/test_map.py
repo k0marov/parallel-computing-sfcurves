@@ -77,3 +77,26 @@ def test_get_ind_returns_correct_values(basic_tile_dtos):
     assert tile_map.get_ind(0, *get_start(0)) == 0
     assert tile_map.get_ind(1, *get_start(1)) == 4
     assert tile_map.get_ind(2, *get_start(2)) == 8
+
+
+def test_reverse_lookup_continuous(basic_tile_dtos):
+    """Test coordinate lookup for all indices"""
+    tile_map = Map(basic_tile_dtos)
+
+    # Test every possible index
+    total_points = sum(tile.n ** 2 for tile in basic_tile_dtos)
+    for idx in range(total_points):
+        t, x, y = tile_map.get_by_ind(idx)
+        assert t >= 0 and x >= 0 and y >= 0, f"Failed lookup for index {idx}"
+        assert tile_map.get_ind(t, x, y) == idx, f"Inconsistent mapping for {idx}"
+
+
+def test_reverse_lookup_mixed_sizes():
+    """Test with different tile sizes"""
+    tile_dtos = [
+        TileDTO(n=4, next_conn=NextConnect.RIGHT),
+        TileDTO(n=2, next_conn=NextConnect.BOTTOM)
+    ]
+    tile_map = Map(tile_dtos)
+    for i in range(6):
+        assert tile_map.get_ind(*tile_map.get_by_ind(i)) == i
