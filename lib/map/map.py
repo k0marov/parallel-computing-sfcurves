@@ -15,8 +15,6 @@ class Map:
         self.tiles = []
         self.tile_curves = []
         self.ind_to_txy = [(-1, -1, -1)] * sum(t.n**2 for t in tiles)
-        print(tiles)
-        print(len(self.ind_to_txy))
         next_start = CornerPlace.TOP_LEFT
         offset = 0
         for tile in tiles:
