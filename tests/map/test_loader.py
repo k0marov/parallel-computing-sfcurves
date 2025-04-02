@@ -1,4 +1,3 @@
-# tests/test_loader.py
 import pytest
 import json
 from tempfile import NamedTemporaryFile

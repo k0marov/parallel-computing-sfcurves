@@ -28,6 +28,11 @@ def test_continuous_numbering_across_tiles(basic_tile_dtos):
     assert actual_values == expected_values, "Missing or duplicate indices in continuous curve"
     assert np.all(np.diff(np.sort(all_values)) == 1), "Curve numbering is not continuous"
 
+def test_connection(basic_tile_dtos):
+    """Verify that proper connection is applied."""
+    tile_map = Map([TileDTO(n=2, next_conn=NextConnect.RIGHT), TileDTO(n=4, next_conn=NextConnect.BOTTOM)])
+    assert tile_map.get_by_ind(3) == (0, 0, 1)
+    assert tile_map.get_by_ind(19) == (1, 3, 3)
 
 def test_correct_offsets_applied(basic_tile_dtos):
     """Verify each tile's curve has the correct offset applied"""

@@ -10,6 +10,30 @@ class TileDTO:
     n: int
     next_conn: NextConnect
 
+def _get_next_start(end: CornerPlace, next_conn: NextConnect) -> CornerPlace:
+    match next_conn:
+        case NextConnect.TOP:
+            if end == CornerPlace.TOP_LEFT:
+                return CornerPlace.BOT_LEFT
+            else:
+                return CornerPlace.BOT_RIGHT
+        case NextConnect.BOTTOM:
+            if end == CornerPlace.BOT_RIGHT:
+                return CornerPlace.TOP_RIGHT
+            else:
+                return CornerPlace.TOP_LEFT
+        case NextConnect.LEFT:
+            if end == CornerPlace.TOP_LEFT:
+                return CornerPlace.TOP_RIGHT
+            else:
+                return CornerPlace.BOT_RIGHT
+        case NextConnect.RIGHT:
+            if end == CornerPlace.TOP_RIGHT:
+                return CornerPlace.TOP_LEFT
+            else:
+                return CornerPlace.BOT_LEFT
+
+
 class Map:
     def __init__(self, tiles: list[TileDTO]):
         self.tiles = []
@@ -19,7 +43,8 @@ class Map:
         offset = 0
         for tile in tiles:
             self.tiles.append(Tile(tile.n, next_start, tile.next_conn))
-            curve, next_start = construct_curve(self.tiles[-1])
+            curve, end = construct_curve(self.tiles[-1])
+            next_start = _get_next_start(end, tile.next_conn)
             curve += offset
             offset += np.size(curve)
             self.tile_curves.append(curve)
@@ -32,3 +57,6 @@ class Map:
 
     def get_by_ind(self, sf_index: int) -> tuple[int, int, int]:
         return self.ind_to_txy[sf_index]
+
+    def get_total_n(self) -> int:
+        return sum(t.n**2 for t in self.tiles)

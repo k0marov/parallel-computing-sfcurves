@@ -28,6 +28,12 @@ def test_construct_curve_basic_rotation():
     curve, end = construct_curve(tile)
     _assert_curve(curve, end, tile)
 
+def test_construct_curve_simple():
+    """Test that a basic curve can be constructed with simple rotation"""
+    tile = Tile(n=2, start=CornerPlace.TOP_LEFT, next_conn=NextConnect.BOTTOM)
+    curve, end = construct_curve(tile)
+    _assert_curve(curve, end, tile)
+
 
 def test_construct_curve_with_fliplr():
     """Test that a curve can be constructed with left-right flip"""
