@@ -5,41 +5,31 @@ import numpy as np
 
 from lib import distribute
 from lib import curves
+from lib.map.loader import load_tile_dtos
+from lib.map.map import Map
 from lib.misc import draw
 from lib.misc import export
+from lib.misc.draw_map import visualize_map
 
 
-def pipeline(N, N_p):
-    n = math.log2(N)
-    assert n.is_integer()
-    n = int(n)
-    curve, xy_to_index = curves.generate_hilbert_mappings(n)
-    assert(len(curve) == N*N)
+def main(config_path: str):
+    tile_dtos = load_tile_dtos(config_path)
 
-    proc_map = distribute.split_into_processors(N * N, N_p)
-    proc_2d_arr = np.take(proc_map, xy_to_index)
-    return curve, proc_map, proc_2d_arr
+    tile_map = Map(tile_dtos)
 
-def main(N, N_p):
-    curve, proc_map_2d, proc_2d_arr = pipeline(N, N_p)
+    proc_mapping = distribute.split_into_processors(tile_map.get_total_n(), 8)
 
-    csv_path = f"output/hilbert_{N}x{N}_into_{N_p}.csv"
-    export.save_2d_array(proc_2d_arr, csv_path)
-    print(f"Saved mapping into '{csv_path}'")
-
-    if N > 256:
-        return
-
-    img_path = f"output/hilbert_{N}x{N}_into_{N_p}.png"
-    draw.plot_mapping(N, curve, proc_map_2d, save_as=img_path)
-    print(f"Saved image into '{img_path}'")
+    visualize_map(tile_map,
+                  proc_mapping,
+                  save_as="output/hilbert_map.png",
+                  show=True,
+                  linewidth=2.0,
+                  figsize=(12, 8))
 
 if __name__ == '__main__':
-    if len(sys.argv) == 3:
-        N = int(sys.argv[1])
-        N_p = int(sys.argv[2])
-        print(f"Running with N = {N} and N_p = {N_p}")
+    if len(sys.argv) == 2:
+        cfg_path = sys.argv[1]
+        print(f"Running with config_path = {cfg_path}")
     else:
-        N = int(input("Side of the square, N = "))
-        N_p = int(input("Number of processors, N_p = "))
-    main(N, N_p)
+        cfg_path = input("Path to json config: ")
+    main(cfg_path)
