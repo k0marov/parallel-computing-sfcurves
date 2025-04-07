@@ -10,6 +10,7 @@ from lib.map.map import Map
 from lib.misc import draw
 from lib.misc import export
 from lib.misc.draw_map import visualize_map
+from lib.misc.export import save_array, save_map
 
 
 def main(config_path: str):
@@ -18,6 +19,8 @@ def main(config_path: str):
     tile_map = Map(tile_dtos)
 
     proc_mapping = distribute.split_into_processors(tile_map.get_total_n(), 8)
+
+    save_map(tile_map, "output/mapping.csv")
 
     visualize_map(tile_map,
                   proc_mapping,

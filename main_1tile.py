@@ -24,7 +24,7 @@ def main(N, N_p):
     curve, proc_map_2d, proc_2d_arr = pipeline(N, N_p)
 
     csv_path = f"output/hilbert_{N}x{N}_into_{N_p}.csv"
-    export.save_2d_array(proc_2d_arr, csv_path)
+    export.save_array(proc_2d_arr, csv_path)
     print(f"Saved mapping into '{csv_path}'")
 
     if N > 256:
