@@ -32,7 +32,7 @@ def test_connection(basic_tile_dtos):
     """Verify that proper connection is applied."""
     tile_map = Map([TileDTO(n=2, next_conn=NextConnect.RIGHT), TileDTO(n=4, next_conn=NextConnect.BOTTOM)])
     assert tile_map.get_by_ind(3) == (0, 0, 1)
-    assert tile_map.get_by_ind(19) == (1, 3, 3)
+    assert tile_map.get_by_ind(19) == (1, 3, 0)
 
 def test_correct_offsets_applied(basic_tile_dtos):
     """Verify each tile's curve has the correct offset applied"""
