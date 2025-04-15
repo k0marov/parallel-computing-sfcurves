@@ -10,10 +10,7 @@ from lib.misc import export
 
 
 def pipeline(N, N_p):
-    n = math.log2(N)
-    assert n.is_integer()
-    n = int(n)
-    curve, xy_to_index = curves.generate_hilbert_mappings(n)
+    curve, xy_to_index = curves.generate_hilbert_mappings(N)
     assert(len(curve) == N*N)
 
     proc_map = distribute.split_into_processors(N * N, N_p)
