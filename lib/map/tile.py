@@ -58,12 +58,13 @@ def _check_curve(curve: np.array, start: CornerPlace, next_conn: NextConnect) ->
 
 @dataclass
 class Tile:
-    n: int
+    width: int
+    height: int
     start: CornerPlace
     next_conn: NextConnect
 
 def construct_curve(tile: Tile) -> tuple[np.array, CornerPlace]:
-    _, curve = curves.generate_hilbert_mappings(tile.n)
+    _, curve = curves.generate_hilbert_mappings(tile.width, tile.height)
     for _ in range(4):
         curve = np.rot90(curve)
         if (end := _check_curve(curve, tile.start, tile.next_conn)) is not None:
@@ -72,4 +73,4 @@ def construct_curve(tile: Tile) -> tuple[np.array, CornerPlace]:
             return np.fliplr(curve), end
         if (end := _check_curve(np.flipud(curve), tile.start, tile.next_conn)) is not None:
             return np.flipud(curve), end
-    raise Exception(f"couldn't get matching sfcurve for {tile.n} {tile.start} {tile.next_conn}")
+    raise Exception(f"couldn't get matching sfcurve for {tile.width} {tile.height} {tile.start} {tile.next_conn}")
