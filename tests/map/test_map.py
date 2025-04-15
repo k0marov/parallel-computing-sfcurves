@@ -7,9 +7,9 @@ from lib.map.tile import get_places
 @pytest.fixture
 def basic_tile_dtos():
     return [
-        TileDTO(n=2, next_conn=NextConnect.RIGHT),
-        TileDTO(n=2, next_conn=NextConnect.BOTTOM),
-        TileDTO(n=2, next_conn=NextConnect.LEFT)
+        TileDTO(width=2, height=2, next_conn=NextConnect.RIGHT),
+        TileDTO(width=2, height=2, next_conn=NextConnect.BOTTOM),
+        TileDTO(width=2, height=2, next_conn=NextConnect.LEFT)
     ]
 
 
@@ -21,8 +21,7 @@ def test_continuous_numbering_across_tiles(basic_tile_dtos):
     all_values = np.concatenate([curve.flatten() for curve in tile_map.tile_curves])
 
     # Should contain all numbers from 0 to (total_points - 1)
-    total_points = sum(tile.n ** 2 for tile in basic_tile_dtos)
-    expected_values = set(range(total_points))
+    expected_values = set(range(tile_map.get_total_n()))
     actual_values = set(all_values)
 
     assert actual_values == expected_values, "Missing or duplicate indices in continuous curve"
@@ -30,7 +29,7 @@ def test_continuous_numbering_across_tiles(basic_tile_dtos):
 
 def test_connection(basic_tile_dtos):
     """Verify that proper connection is applied."""
-    tile_map = Map([TileDTO(n=2, next_conn=NextConnect.RIGHT), TileDTO(n=4, next_conn=NextConnect.BOTTOM)])
+    tile_map = Map([TileDTO(width=2, height=2, next_conn=NextConnect.RIGHT), TileDTO(width=4, height=4, next_conn=NextConnect.BOTTOM)])
     assert tile_map.get_by_ind(3) == (0, 0, 1)
     assert tile_map.get_by_ind(19) == (1, 3, 0)
 
@@ -54,8 +53,8 @@ def test_correct_offsets_applied(basic_tile_dtos):
 def test_mixed_tile_sizes():
     """Test with tiles of different sizes"""
     tile_dtos = [
-        TileDTO(n=4, next_conn=NextConnect.RIGHT),  # 16 points (0-15)
-        TileDTO(n=2, next_conn=NextConnect.BOTTOM)  # 4 points (16-19)
+        TileDTO(width=4, height=4, next_conn=NextConnect.RIGHT),  # 16 points (0-15)
+        TileDTO(width=4, height=4, next_conn=NextConnect.BOTTOM)  # 4 points (16-19)
     ]
     tile_map = Map(tile_dtos)
 
@@ -99,8 +98,8 @@ def test_reverse_lookup_continuous(basic_tile_dtos):
 def test_reverse_lookup_mixed_sizes():
     """Test with different tile sizes"""
     tile_dtos = [
-        TileDTO(n=4, next_conn=NextConnect.RIGHT),
-        TileDTO(n=2, next_conn=NextConnect.BOTTOM)
+        TileDTO(width=4, height=4, next_conn=NextConnect.RIGHT),
+        TileDTO(width=4, height=4, next_conn=NextConnect.BOTTOM)
     ]
     tile_map = Map(tile_dtos)
     for i in range(6):
