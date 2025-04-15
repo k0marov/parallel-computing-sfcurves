@@ -74,7 +74,7 @@ def generate2d(x, y, ax, ay, bx, by):
 def generate_hilbert_mappings(N, M):
     total_points = N * M
     index_to_xy = np.array([(0, 0)] * total_points, dtype=int)
-    xy_to_index = np.zeros((N, N), dtype=int)
+    xy_to_index = np.zeros((N, M), dtype=int)
     i = 0
     for (x, y) in gilbert2d(N, M):
         xy_to_index[x, y] = i
