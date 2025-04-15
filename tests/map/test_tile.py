@@ -28,6 +28,12 @@ def test_construct_curve_basic_rotation():
     curve, end = construct_curve(tile)
     _assert_curve(curve, end, tile)
 
+def test_construct_non_power_of_two():
+    """Test that a basic curve can be constructed with non 2^n sizes."""
+    tile = Tile(n=3, start=CornerPlace.TOP_LEFT, next_conn=NextConnect.RIGHT)
+    curve, end = construct_curve(tile)
+    _assert_curve(curve, end, tile)
+
 def test_construct_curve_simple():
     """Test that a basic curve can be constructed with simple rotation"""
     tile = Tile(n=2, start=CornerPlace.TOP_LEFT, next_conn=NextConnect.BOTTOM)

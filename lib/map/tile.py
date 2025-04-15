@@ -58,12 +58,12 @@ def _check_curve(curve: np.array, start: CornerPlace, next_conn: NextConnect) ->
 
 @dataclass
 class Tile:
-    n: int # it must be a power of 2
+    n: int
     start: CornerPlace
     next_conn: NextConnect
 
 def construct_curve(tile: Tile) -> tuple[np.array, CornerPlace]:
-    _, curve = curves.generate_hilbert_mappings(int(math.log2(tile.n)))
+    _, curve = curves.generate_hilbert_mappings(tile.n)
     for _ in range(4):
         curve = np.rot90(curve)
         if (end := _check_curve(curve, tile.start, tile.next_conn)) is not None:

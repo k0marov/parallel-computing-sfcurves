@@ -7,7 +7,7 @@ from .map import TileDTO, NextConnect
 
 @dataclass
 class TileConfig:
-    size: int  # n (must be power of 2)
+    size: int
     connection: str
 
 
