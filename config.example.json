@@ -1,8 +1,8 @@
 [
-  {"size": 8, "connection": "RIGHT"},
-  {"size": 8, "connection": "TOP"},
-  {"size": 8, "connection":  "RIGHT"},
-  {"size": 8, "connection":  "TOP"},
-  {"size": 8, "connection":  "RIGHT"},
-  {"size": 8, "connection":  "TOP"}
+  {"width": 10, "height": 5, "connection": "RIGHT"},
+  {"width": 8, "height": 8, "connection": "TOP"},
+  {"width": 8, "height": 8, "connection":  "RIGHT"},
+  {"width": 8, "height": 8, "connection":  "TOP"},
+  {"width": 8, "height": 8, "connection":  "RIGHT"},
+  {"width": 8, "height": 8, "connection":  "TOP"}
 ]

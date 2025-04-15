@@ -21,11 +21,16 @@ def calculate_tile_positions(tile_map: Map) -> Tuple[np.ndarray, dict]:
     tile_rects = {}
     current_x, current_y = 0, 0
 
+
     for t, tile in enumerate(tile_map.tiles):
-        n = tile.n-1
+        # n = tile.n-1
+        width = tile.width-1
+        height = tile.height-1
+        # if t == 0:
+        #     width, height = height, width
         # Store tile position and dimensions
         tile_positions[t] = (current_x, current_y)
-        tile_rects[t] = (current_x, current_y, n, n)
+        tile_rects[t] = (current_x, current_y, width, height)
 
         TILE_MARGIN = 0.1
 
@@ -33,21 +38,24 @@ def calculate_tile_positions(tile_map: Map) -> Tuple[np.ndarray, dict]:
         if t < len(tile_map.tiles) - 1:
             next_conn = tile.next_conn
             if next_conn == NextConnect.RIGHT:
-                current_x += n + TILE_MARGIN
+                current_x += width + TILE_MARGIN
             elif next_conn == NextConnect.LEFT:
-                current_x -= n + TILE_MARGIN
+                current_x -= width + TILE_MARGIN
             elif next_conn == NextConnect.TOP:
-                current_y -= n + TILE_MARGIN
+                current_y -= height + TILE_MARGIN
             elif next_conn == NextConnect.BOTTOM:
-                current_y += n + TILE_MARGIN
+                current_y += height + TILE_MARGIN
 
     # Create coordinate mapping for all points
-    base_coords = np.zeros((sum(t.n ** 2 for t in tile_map.tiles), 2))
+    base_coords = np.zeros((tile_map.get_total_n(), 2))
     for t, curve in enumerate(tile_map.tile_curves):
         tile_x, tile_y = tile_positions[t]
-        n = tile_map.tiles[t].n
-        for x in range(n):
-            for y in range(n):
+        width = tile_map.tiles[t].width
+        height = tile_map.tiles[t].height
+        # if t == 0:
+        #     tile_x, tile_y = tile_y, tile_x
+        for x in range(height):
+            for y in range(width):
                 hilbert_idx = curve[y, x]
                 base_coords[hilbert_idx] = [tile_x + x, tile_y + y]
 
@@ -98,7 +106,7 @@ def visualize_map(tile_map: Map,
     for t, (x, y, w, h) in tile_rects.items():
         rect = Rectangle((x, y), w, h, fill=False, edgecolor='red', linestyle='--', alpha=0.5)
         ax.add_patch(rect)
-        ax.text(x + w / 2, y + h / 2, f'Tile {t}\n{tile_map.tiles[t].n}x{tile_map.tiles[t].n}', ha='center', va='center', fontsize=8)
+        ax.text(x + w / 2, y + h / 2, f'Tile {t}\n{tile_map.tiles[t].width}x{tile_map.tiles[t].height}', ha='center', va='center', fontsize=8)
 
     # Calculate proper plot limits
     all_x = [x for x, _, _, _ in tile_rects.values()]
@@ -114,25 +122,6 @@ def visualize_map(tile_map: Map,
     plt.yticks([])
     # ax.grid(True, which='both', linestyle=':', alpha=0.5)
     ax.set_title(f'Hilbert Curve Across Tiles, N = {tile_map.get_total_n()}, N_p = {np.unique(proc_mapping).size}', pad=20)
-
-    # Add connection arrows between tiles
-    for t in range(len(tile_map.tiles) - 1):
-        x1, y1, w1, h1 = tile_rects[t]
-    x2, y2, w2, h2 = tile_rects[t + 1]
-
-    # Calculate connection points
-    if tile_map.tiles[t].next_conn == NextConnect.RIGHT:
-        start = (x1 + w1, y1 + h1 / 2)
-        end = (x2, y2 + h2 / 2)
-    elif tile_map.tiles[t].next_conn == NextConnect.LEFT:
-        start = (x1, y1 + h1 / 2)
-        end = (x2 + w2, y2 + h2 / 2)
-    elif tile_map.tiles[t].next_conn == NextConnect.TOP:
-        start = (x1 + w1 / 2, y1 + h1)
-        end = (x2 + w2 / 2, y2)
-    else:
-        start = (x1 + w1 / 2, y1)
-        end = (x2 + w2 / 2, y2 + h2)
 
     plt.gca().invert_yaxis()
 

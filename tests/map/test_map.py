@@ -54,7 +54,7 @@ def test_mixed_tile_sizes():
     """Test with tiles of different sizes"""
     tile_dtos = [
         TileDTO(width=4, height=4, next_conn=NextConnect.RIGHT),  # 16 points (0-15)
-        TileDTO(width=4, height=4, next_conn=NextConnect.BOTTOM)  # 4 points (16-19)
+        TileDTO(width=2, height=2, next_conn=NextConnect.BOTTOM)  # 4 points (16-19)
     ]
     tile_map = Map(tile_dtos)
 
@@ -76,7 +76,7 @@ def test_get_ind_returns_correct_values(basic_tile_dtos):
     tile_map = Map(basic_tile_dtos)
 
     # Test indices across tile boundaries
-    get_start = lambda i: get_places(tile_map.tiles[i].n, tile_map.tiles[i].n)[tile_map.tiles[i].start]
+    get_start = lambda i: get_places(tile_map.tiles[i].width, tile_map.tiles[i].height)[tile_map.tiles[i].start]
 
     assert tile_map.get_ind(0, *get_start(0)) == 0
     assert tile_map.get_ind(1, *get_start(1)) == 4
@@ -88,8 +88,7 @@ def test_reverse_lookup_continuous(basic_tile_dtos):
     tile_map = Map(basic_tile_dtos)
 
     # Test every possible index
-    total_points = sum(tile.n ** 2 for tile in basic_tile_dtos)
-    for idx in range(total_points):
+    for idx in range(tile_map.get_total_n()):
         t, x, y = tile_map.get_by_ind(idx)
         assert t >= 0 and x >= 0 and y >= 0, f"Failed lookup for index {idx}"
         assert tile_map.get_ind(t, x, y) == idx, f"Inconsistent mapping for {idx}"
