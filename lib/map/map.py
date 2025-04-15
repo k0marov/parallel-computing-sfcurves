@@ -7,7 +7,8 @@ from lib.map.tile import Tile, construct_curve, NextConnect, CornerPlace
 
 @dataclass
 class TileDTO:
-    n: int
+    width: int
+    height: int
     next_conn: NextConnect
 
 def _get_next_start(end: CornerPlace, next_conn: NextConnect) -> CornerPlace:

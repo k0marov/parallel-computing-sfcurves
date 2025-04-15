@@ -23,8 +23,8 @@ def load_tile_dtos(json_path: str | Path) -> List[TileDTO]:
 
     Example JSON format:
     [
-        {"size": 2, "connection": "RIGHT"},
-        {"size": 4, "connection": "BOTTOM"}
+        {"width": 2, "height": 3, "connection": "RIGHT"},
+        {"width": 4, "height": 5, "connection": "BOTTOM"}
     ]
     """
     path = Path(json_path)
@@ -39,7 +39,7 @@ def load_tile_dtos(json_path: str | Path) -> List[TileDTO]:
         try:
             connection = NextConnect[config['connection'].upper()]
             tile_dtos.append(
-                TileDTO(n=config['size'], next_conn=connection)
+                TileDTO(width=config['width'], height=config['height'], next_conn=connection)
             )
         except KeyError as e:
             raise ValueError(f"Invalid connection type: {config['connection']}") from e
