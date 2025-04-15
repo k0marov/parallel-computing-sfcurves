@@ -7,7 +7,8 @@ from lib.map.tile import Tile, construct_curve, NextConnect, CornerPlace
 
 @dataclass
 class TileDTO:
-    n: int
+    width: int
+    height: int
     next_conn: NextConnect
 
 def _get_next_start(end: CornerPlace, next_conn: NextConnect) -> CornerPlace:
@@ -38,11 +39,11 @@ class Map:
     def __init__(self, tiles: list[TileDTO]):
         self.tiles = []
         self.tile_curves = []
-        self.ind_to_txy = [(-1, -1, -1)] * sum(t.n**2 for t in tiles)
+        self.ind_to_txy = [(-1, -1, -1)] * sum(t.width*t.height for t in tiles)
         next_start = CornerPlace.TOP_LEFT
         offset = 0
         for tile in tiles:
-            self.tiles.append(Tile(tile.n, next_start, tile.next_conn))
+            self.tiles.append(Tile(tile.width, tile.height, next_start, tile.next_conn))
             curve, end = construct_curve(self.tiles[-1])
             next_start = _get_next_start(end, tile.next_conn)
             curve += offset
@@ -59,4 +60,4 @@ class Map:
         return self.ind_to_txy[sf_index]
 
     def get_total_n(self) -> int:
-        return sum(t.n**2 for t in self.tiles)
+        return sum(t.width*t.height for t in self.tiles)

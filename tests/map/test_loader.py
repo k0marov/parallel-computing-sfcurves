@@ -9,8 +9,8 @@ from lib.map.map import NextConnect
 def test_load_valid_config():
     """Test loading valid JSON configuration"""
     config = [
-        {"size": 2, "connection": "RIGHT"},
-        {"size": 4, "connection": "BOTTOM"}
+        {"width": 2, "height": 3, "connection": "RIGHT"},
+        {"width": 4, "height": 5, "connection": "BOTTOM"}
     ]
 
     with NamedTemporaryFile('w', suffix='.json') as f:
@@ -19,9 +19,11 @@ def test_load_valid_config():
         tiles = load_tile_dtos(f.name)
 
     assert len(tiles) == 2
-    assert tiles[0].n == 2
+    assert tiles[0].width == 2
+    assert tiles[0].height == 3
     assert tiles[0].next_conn == NextConnect.RIGHT
-    assert tiles[1].n == 4
+    assert tiles[1].width == 4
+    assert tiles[1].height == 5
     assert tiles[1].next_conn == NextConnect.BOTTOM
 
 
@@ -53,7 +55,7 @@ def test_invalid_json_structure():
 
 def test_case_insensitive_connections():
     """Test connection type case insensitivity"""
-    config = [{"size": 2, "connection": "right"}]  # Lowercase
+    config = [{"width": 2, "height": 4, "connection": "right"}]  # Lowercase
 
     with NamedTemporaryFile('w', suffix='.json') as f:
         json.dump(config, f)
