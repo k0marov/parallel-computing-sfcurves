@@ -1,3 +1,5 @@
+from operator import index
+
 import numpy as np
 
 # Algorithm taken from https://github.com/jakubcerveny/gilbert
@@ -12,10 +14,7 @@ def gilbert2d(width, height):
     of size (width x height).
     """
 
-    if width >= height:
-        yield from generate2d(0, 0, width, 0, 0, height)
-    else:
-        yield from generate2d(0, 0, 0, height, width, 0)
+    yield from generate2d(0, 0, 0, height, width, 0)
 
 
 def sgn(x):
@@ -80,32 +79,18 @@ def generate_hilbert_mappings(N, M):
         xy_to_index[x, y] = i
         index_to_xy[i] = (x, y)
         i += 1
-    return index_to_xy, xy_to_index
 
-    # def rot(n, x, y, rx, ry):
-    #     if ry == 0:
-    #         if rx == 1:
-    #             x = n - 1 - x
-    #             y = n - 1 - y
-    #         x, y = y, x
-    #     return x, y
-    #
-    # N = 2**n
-    # total_points = N * N
-    # index_to_xy = np.array([(0, 0)] * total_points, dtype=int)
-    # xy_to_index = np.zeros((N, N), dtype=int)
-    #
-    # for i in range(total_points):
-    #     x, y = 0, 0
-    #     t = i
-    #     for s in range(1, n + 1):
-    #         rx = (t >> 1) & 1
-    #         ry = (t ^ rx) & 1
-    #         x, y = rot(2**(s - 1), x, y, rx, ry)
-    #         x += (1 << (s - 1)) * rx
-    #         y += (1 << (s - 1)) * ry
-    #         t >>= 2
-    #     index_to_xy[i] = (x, y)
-    #     xy_to_index[x][y] = i
-    #
-    # return index_to_xy, xy_to_index
+    last = index_to_xy[-1]
+    closest = (0, 0)
+    for corner in ((0, M-1), (N-1, M-1), (N-1, 0)):
+        if sum(abs(corner - last)) < sum(abs(closest - last)):
+            closest = corner
+    last = last.tolist()
+
+    ind = xy_to_index[closest]
+    index_to_xy[-1] = closest
+    index_to_xy[ind] = last
+    xy_to_index[closest[0]][closest[1]] = total_points-1
+    xy_to_index[last[0]][last[1]] = ind
+
+    return index_to_xy, xy_to_index
