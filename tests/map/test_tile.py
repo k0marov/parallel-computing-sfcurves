@@ -5,11 +5,11 @@ from lib.map.tile import Tile, CornerPlace, construct_curve, NextConnect, _get_s
 
 def _assert_curve(curve, end, tile):
     # Basic checks
-    assert curve.shape == (tile.width, tile.height)
+    assert curve.shape == (tile.height, tile.width)
     assert type(end) is CornerPlace
 
     # Check start position is correct
-    assert curve[get_places(tile.width, tile.height)[tile.start]] == 0
+    assert curve[get_places(tile.height, tile.width)[tile.start]] == 0
 
     # Check the curve is continuous
     max_val = np.max(curve)
@@ -19,7 +19,7 @@ def _assert_curve(curve, end, tile):
     # Check that the end position actually contains the max value
     assert tile.next_conn in _get_sides(end)
     max_val = np.max(curve)
-    assert curve[get_places(tile.width, tile.height)[end]] == max_val
+    assert curve[get_places(tile.height, tile.width)[end]] == max_val
 
 
 def test_construct_curve_basic_rotation():
@@ -59,10 +59,15 @@ def test_construct_curve_with_flipud():
 
 def test_construct_curve_multiple_attempts():
     """Test that the function tries multiple rotations/flips before failing"""
-    tile = Tile(width=8, height=8, start=CornerPlace.BOT_RIGHT, next_conn=NextConnect.LEFT)
+    tile = Tile(width=2, height=2, start=CornerPlace.BOT_RIGHT, next_conn=NextConnect.LEFT)
     curve, end = construct_curve(tile)
     _assert_curve(curve, end, tile)
 
+def test_construct_curve_non_square():
+    """Test that the function tries multiple rotations/flips before failing"""
+    tile = Tile(width=5, height=2, start=CornerPlace.TOP_LEFT, next_conn=NextConnect.RIGHT)
+    curve, end = construct_curve(tile)
+    _assert_curve(curve, end, tile)
 
 def test_construct_curve_returns_valid_end():
     """Test that the returned end position is valid"""

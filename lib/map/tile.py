@@ -1,5 +1,4 @@
 from dataclasses import dataclass
-import math
 import typing
 from enum import Enum
 
@@ -63,14 +62,31 @@ class Tile:
     start: CornerPlace
     next_conn: NextConnect
 
+def _get_transposed_curve(width: int, height: int) -> np.array:
+    _, curve = curves.generate_hilbert_mappings(width, height)
+    return curve.transpose()
+
+def _check_ways(tile: Tile, curve: np.array) -> typing.Optional[tuple[np.array, CornerPlace]]:
+    if (end := _check_curve(curve, tile.start, tile.next_conn)) is not None:
+        return curve, end
+    if (end := _check_curve(np.fliplr(curve), tile.start, tile.next_conn)) is not None:
+        return np.fliplr(curve), end
+    if (end := _check_curve(np.flipud(curve), tile.start, tile.next_conn)) is not None:
+        return np.flipud(curve), end
+
 def construct_curve(tile: Tile) -> tuple[np.array, CornerPlace]:
-    _, curve = curves.generate_hilbert_mappings(tile.width, tile.height)
-    for _ in range(4):
-        curve = np.rot90(curve)
-        if (end := _check_curve(curve, tile.start, tile.next_conn)) is not None:
-            return curve, end
-        if (end := _check_curve(np.fliplr(curve), tile.start, tile.next_conn)) is not None:
-            return np.fliplr(curve), end
-        if (end := _check_curve(np.flipud(curve), tile.start, tile.next_conn)) is not None:
-            return np.flipud(curve), end
+    _, curve = curves.generate_hilbert_mappings(tile.height, tile.width)
+    if (res := _check_ways(tile, curve)) is not None:
+        return res
+    if (res := _check_ways(tile, np.fliplr(curve))) is not None:
+        return res
+    if (res := _check_ways(tile, np.flipud(curve))) is not None:
+        return res
+    t_curve = _get_transposed_curve(tile.width, tile.height)
+    if (res := _check_ways(tile, t_curve)) is not None:
+        return res
+    if (res := _check_ways(tile, np.fliplr(t_curve))) is not None:
+        return res
+    if (res := _check_ways(tile, np.flipud(t_curve))) is not None:
+        return res
     raise Exception(f"couldn't get matching sfcurve for {tile.width} {tile.height} {tile.start} {tile.next_conn}")
