@@ -15,9 +15,9 @@ from lib.misc.export import save_array, save_map
 
 def main(config_path: str):
     tile_dtos = load_tile_dtos(config_path)
-    for t in tile_dtos:
-        if t.width != t.height:
-            raise NotImplementedError("handling Map with non-square Tiles is not implemented")
+    # for t in tile_dtos:
+    #     if t.width != t.height:
+    #         raise NotImplementedError("handling Map with non-square Tiles is not implemented")
 
     tile_map = Map(tile_dtos)
 
