@@ -42,5 +42,5 @@ python3 main.py <path_to_config>
 ### Пример разбиения с неквадратными панелями
 ![hilbert_map.png](docs/imgs/hilbert_map_non_square.png)
 
-### Бенчмарк
-![benchmark.png](docs/imgs/benchmark.png)
+### Сравнение с геометрическим алгоритмом (чем меньше суммарный периметр, тем лучше)
+![hilbert_vs_geometric.png](docs/imgs/hilbert_vs_geometric.png)
