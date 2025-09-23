@@ -30,8 +30,8 @@ def main(panel_side: int, square_side: int, N_p: int):
 
     proc_mapping = distribute.split_into_processors(tile_map.get_total_n(), N_p)
 
-    save_map_format_squared(tile_map, proc_mapping, "output/mapping.csv", square_side=square_side)
-    print("Mapping was saved to output/mapping.csv")
+    save_map_format_squared(tile_map, proc_mapping, "output/mapping.txt", square_side=square_side)
+    print("Mapping was saved to output/mapping.txt")
     # visualize_map(tile_map,
     #               proc_mapping,
     #               save_as="output/hilbert_map.png",

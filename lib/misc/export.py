@@ -20,4 +20,4 @@ def save_map_format_squared(map: Map, mapping: np.array, path: str, square_side:
             for x in range(map.tiles[t].width):
                 tyx.append([t, y, x])
     arr = np.array([[mapping[map.get_ind(t, y, x)], t + 1, y * square_side, x * square_side, y * square_side + square_side - 1, x * square_side + square_side - 1] for t, y, x in tyx], dtype=int)
-    numpy.savetxt(path, arr.astype(int), fmt='%u', header="p,t,y_start,x_start,y_end,x_end")
+    numpy.savetxt(path, arr.astype(int), fmt='%u')
