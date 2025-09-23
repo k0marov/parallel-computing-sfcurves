@@ -1,0 +1,5 @@
+[
+  {"width": 5, "height": 5, "connection": "RIGHT"},
+  {"width": 2, "height": 10, "connection": "LEFT"},
+  {"width": 4, "height": 4, "connection": "LEFT"}
+]

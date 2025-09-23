@@ -126,3 +126,38 @@ def create_partition(npanels: int, Nx: List[int], Ny: List[int], nprocs: int) ->
 
     partition.tiles = tmp_tiles
     return partition
+
+
+def partition_to_2d_arrays(partition: Partition, Nx: List[int], Ny: List[int]) -> List[np.ndarray]:
+    """
+    Converts a Partition object to a list of 2D numpy arrays where each array
+    represents a panel and contains processor indices for each cell.
+
+    Args:
+        partition: The Partition object containing the mapping
+        Nx: List of x-dimensions for each panel
+        Ny: List of y-dimensions for each panel
+
+    Returns:
+        List of 2D numpy arrays (one per panel) with processor indices
+    """
+    npanels = len(Nx)
+    panel_arrays = []
+
+    for panel_idx in range(npanels):
+        # Create empty array for this panel
+        panel_array = np.zeros((Ny[panel_idx], Nx[panel_idx]), dtype=int)
+
+        # Find all tiles belonging to this panel (1-based index)
+        panel_tile_indices = np.where(partition.panel_map == panel_idx + 1)[0]
+
+        for tile_idx in panel_tile_indices:
+            tile = partition.tiles[tile_idx]
+            proc_id = partition.proc_map[tile_idx]
+
+            # Fill the tile area with the processor ID
+            panel_array[tile.j_s - 1:tile.j_e, tile.i_s - 1:tile.i_e] = proc_id
+
+        panel_arrays.append(panel_array)
+
+    return panel_arrays
