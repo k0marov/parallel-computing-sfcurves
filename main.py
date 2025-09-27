@@ -9,7 +9,7 @@ from lib.map.loader import load_tile_dtos
 from lib.map.map import Map
 from lib.misc import draw
 from lib.misc import export
-from lib.misc.draw_map import visualize_map
+from lib.misc.draw_map import visualize_both, visualize_map_rectangles, visualize_map_lines
 from lib.misc.export import save_array, save_map
 
 
@@ -21,16 +21,16 @@ def main(config_path: str):
 
     tile_map = Map(tile_dtos)
 
-    proc_mapping = distribute.split_into_processors(tile_map.get_total_n(), 8)
+    proc_mapping = distribute.split_into_processors(tile_map.get_total_n(), 128)
 
     save_map(tile_map, "output/mapping.csv")
 
-    visualize_map(tile_map,
-                  proc_mapping,
-                  save_as="output/hilbert_map.png",
-                  show=True,
-                  linewidth=2.0,
-                  figsize=(12, 8))
+    #fig1 = visualize_map_lines(tile_map, proc_mapping, colormap='tab20')
+    
+    fig2 = visualize_map_rectangles(tile_map, proc_mapping, dpi=100, save_as = 'output/rect', colormap='tab20')
+    fig3 = visualize_map_lines(tile_map, proc_mapping, dpi=100, save_as = 'output/lines', colormap='tab20')
+    # Both for comparison
+    #fig3 = visualize_both(tile_map, proc_mapping)
 
 if __name__ == '__main__':
     if len(sys.argv) == 2:
